@@ -21,6 +21,7 @@ const Login = () => {
           },
         }}
       >
+        
         <Typography variant="h2" padding={3} textAlign="center">
           Login
         </Typography>
@@ -28,17 +29,11 @@ const Login = () => {
         <TextField
           sx={{width:'70%'}}
           margin="normal"
-          type="text"
-          label = "Name"
-          variant="outlined"
-        />
-        <TextField
-          sx={{width:'70%'}}
-          margin="normal"
           type="email"
           label = "Email"
           variant="outlined"
         />
+
         <TextField
           sx={{width:'70%'}}
           margin="normal"
