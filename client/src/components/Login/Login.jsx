@@ -1,7 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Login.css";
 import { TextField, Box, Typography, Button } from "@mui/material";
 const Login = () => {
+ 
+  const [user, setUser] = useState({
+    email:"",
+    password:""
+  })
+
+  const handleChange = (e) =>{
+    const{name, value} = e.target;
+    setUser({
+      ...user,
+      [name]: value
+    });
+  }
+
+  const handleSubmit = ()=>{
+    
+  }
+
+
   return (
     <div>
       <Box
@@ -21,28 +40,40 @@ const Login = () => {
           },
         }}
       >
-        
         <Typography variant="h2" padding={3} textAlign="center">
           Login
         </Typography>
 
         <TextField
-          sx={{width:'70%'}}
+          sx={{ width: "70%" }}
           margin="normal"
           type="email"
-          label = "Email"
+          label="Email"
           variant="outlined"
+          name="email"
+          value={user.email}
+          onChange={handleChange}
         />
 
         <TextField
-          sx={{width:'70%'}}
+          sx={{ width: "70%" }}
           margin="normal"
           type="password"
-          label = "Password"
+          label="Password"
           variant="outlined"
+          name="password"
+          value={user.password}
+          onChange={handleChange}
         />
 
-        <Button sx={{marginTop:3, borderRadius: 3}} variant="contained" color="warning">Login</Button>
+        <Button
+          sx={{ marginTop: 3, borderRadius: 3 }}
+          variant="contained"
+          color="warning"
+          onClick={handleSubmit}
+        >
+          Login
+        </Button>
       </Box>
     </div>
   );

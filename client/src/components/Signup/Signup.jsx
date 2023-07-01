@@ -1,7 +1,23 @@
-import React from "react";
-import { TextField, Box, Typography, Button } from "@mui/material";
+import React, { useState } from "react";
+import { TextField, Box, Typography, Button, useAutocomplete } from "@mui/material";
 
 const Signup = () => {
+    const[user, setUser] = useState({
+        name: "",
+        email : "",
+        password : "",
+        reEnterPassword : "",
+    })
+
+    const handleChange = (e)=>{
+        const {name, value } = e.target;
+        setUser({
+            ...user, 
+            [name] : value
+        });
+
+    }
+
   return (
     <div>
       <Box
@@ -31,6 +47,9 @@ const Signup = () => {
           type="text"
           label="Name"
           variant="outlined"
+          name ="name"
+          value={user.name}
+          onChange={handleChange}
         />
 
         <TextField
@@ -39,6 +58,9 @@ const Signup = () => {
           type="email"
           label="Email"
           variant="outlined"
+          name ="email"
+          value={user.email}
+          onChange={handleChange}
         />
 
         <TextField
@@ -47,6 +69,20 @@ const Signup = () => {
           type="password"
           label="Password"
           variant="outlined"
+          name ="password"
+          value={user.password}
+          onChange={handleChange}
+        />
+
+        <TextField
+          sx={{ width: "70%" }}
+          margin="normal"
+          type="password"
+          label="Re-Enter Password"
+          variant="outlined"
+          name ="reEnterPassword"
+          value={user.reEnterPassword}
+          onChange={handleChange}
         />
 
         <Button
