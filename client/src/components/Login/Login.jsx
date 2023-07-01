@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import "./Login.css";
 import { TextField, Box, Typography, Button } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
 const Login = () => {
- 
+  const navigate = useNavigate()
+
   const [user, setUser] = useState({
     email:"",
     password:""
   })
+
+  const [errMsg, setErrMsg] = useState("");
 
   const handleChange = (e) =>{
     const{name, value} = e.target;
@@ -14,10 +18,42 @@ const Login = () => {
       ...user,
       [name]: value
     });
+    setErrMsg("");
   }
 
-  const handleSubmit = ()=>{
-    
+  const perfomChecks = ()=>{
+    const {email, password} = user
+      if(email && password ){
+          LoginUser();
+      }
+      else{
+          setErrMsg("All feilds are mandatory");
+      }
+  }
+
+  const LoginUser = async () =>{
+    try{
+      const response = await fetch("http://localhost:3001/user/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(user),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          console.log("Registeration successful");
+        } else {
+          setErrMsg(data.message)
+          if(data.error) {console.log(data.error)}
+        }
+
+      }
+      catch (error){
+        console.error(error);
+      }
   }
 
 
@@ -66,14 +102,23 @@ const Login = () => {
           onChange={handleChange}
         />
 
+        <Typography
+          variant="caption"
+          marginTop={3}
+          sx={{ color: "error.main" }}
+        >
+          {errMsg}
+        </Typography>
+
         <Button
           sx={{ marginTop: 3, borderRadius: 3 }}
           variant="contained"
           color="warning"
-          onClick={handleSubmit}
+          onClick={perfomChecks}
         >
           Login
         </Button>
+        <Button onClick={()=>{navigate("/")}}>Register</Button>
       </Box>
     </div>
   );

@@ -1,13 +1,25 @@
 import React, { useState } from "react";
-import { TextField, Box, Typography, Button, useAutocomplete } from "@mui/material";
+import { TextField, Box, Typography, Button } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
+    
     const[user, setUser] = useState({
         name: "",
         email : "",
         password : "",
         reEnterPassword : "",
     })
+    const [errMsg, setErrMsg] = useState("");
+
+    
+    const navigate = useNavigate()
+
+
+    const navigateToLogin = () =>{
+      navigate("/Login")
+    }
+
 
     const handleChange = (e)=>{
         const {name, value } = e.target;
@@ -15,8 +27,51 @@ const Signup = () => {
             ...user, 
             [name] : value
         });
-
+        setErrMsg("");
     }
+
+    const perfomChecks = () =>{
+      const {name, email, password, reEnterPassword} = user
+      if(name && email && password && reEnterPassword){
+        if(password === reEnterPassword){
+          registerUser();
+        }
+        else{
+          setErrMsg('Passwords does not match')
+        }
+      }
+      else{
+          setErrMsg("All feilds are mandatory");
+        }
+    }
+    
+
+
+    const registerUser = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/user/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(user),
+        });
+
+        const data = await response.json();
+        console.log(data.message);
+
+        if (response.ok) {
+          console.log("Registeration successful");
+          navigateToLogin()
+        } else {
+          setErrMsg(data.message)
+          if(data.error) {console.log(data.error)}
+        }
+      } catch (error) {
+        setErrMsg("Registration failed due to server error")
+        console.log(error)
+      }
+    };
 
   return (
     <div>
@@ -47,7 +102,7 @@ const Signup = () => {
           type="text"
           label="Name"
           variant="outlined"
-          name ="name"
+          name="name"
           value={user.name}
           onChange={handleChange}
         />
@@ -58,7 +113,7 @@ const Signup = () => {
           type="email"
           label="Email"
           variant="outlined"
-          name ="email"
+          name="email"
           value={user.email}
           onChange={handleChange}
         />
@@ -69,7 +124,7 @@ const Signup = () => {
           type="password"
           label="Password"
           variant="outlined"
-          name ="password"
+          name="password"
           value={user.password}
           onChange={handleChange}
         />
@@ -80,18 +135,26 @@ const Signup = () => {
           type="password"
           label="Re-Enter Password"
           variant="outlined"
-          name ="reEnterPassword"
+          name="reEnterPassword"
           value={user.reEnterPassword}
           onChange={handleChange}
         />
-
+        <Typography
+          variant="caption"
+          marginTop={3}
+          sx={{ color: "error.main" }}
+        >
+          {errMsg}
+        </Typography>
         <Button
           sx={{ marginTop: 3, borderRadius: 3 }}
           variant="contained"
           color="warning"
+          onClick={perfomChecks}
         >
           Register
         </Button>
+        <Button onClick={navigateToLogin}> Login </Button>
       </Box>
     </div>
   );
