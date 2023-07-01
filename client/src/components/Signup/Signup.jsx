@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { TextField, Box, Typography, Button, useAutocomplete } from "@mui/material";
+import { TextField, Box, Typography, Button } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
-
+    
     const[user, setUser] = useState({
         name: "",
         email : "",
@@ -10,6 +11,16 @@ const Signup = () => {
         reEnterPassword : "",
     })
     const [errMsg, setErrMsg] = useState("");
+
+    
+    const navigate = useNavigate()
+
+
+    const navigateToLogin = () =>{
+      navigate("/Login")
+    }
+
+
     const handleChange = (e)=>{
         const {name, value } = e.target;
         setUser({
@@ -38,7 +49,7 @@ const Signup = () => {
 
     const registerUser = async () => {
       try {
-        const response = await fetch("http://localhost:3001/register", {
+        const response = await fetch("http://localhost:3001/user/register", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -51,6 +62,7 @@ const Signup = () => {
 
         if (response.ok) {
           console.log("Registeration successful");
+          navigateToLogin()
         } else {
           setErrMsg(data.message)
           if(data.error) {console.log(data.error)}
@@ -90,7 +102,7 @@ const Signup = () => {
           type="text"
           label="Name"
           variant="outlined"
-          name ="name"
+          name="name"
           value={user.name}
           onChange={handleChange}
         />
@@ -101,7 +113,7 @@ const Signup = () => {
           type="email"
           label="Email"
           variant="outlined"
-          name ="email"
+          name="email"
           value={user.email}
           onChange={handleChange}
         />
@@ -112,7 +124,7 @@ const Signup = () => {
           type="password"
           label="Password"
           variant="outlined"
-          name ="password"
+          name="password"
           value={user.password}
           onChange={handleChange}
         />
@@ -123,14 +135,14 @@ const Signup = () => {
           type="password"
           label="Re-Enter Password"
           variant="outlined"
-          name ="reEnterPassword"
+          name="reEnterPassword"
           value={user.reEnterPassword}
           onChange={handleChange}
         />
         <Typography
-        variant="caption"
-        marginTop={3}
-        sx ={{color : 'error.main'}}
+          variant="caption"
+          marginTop={3}
+          sx={{ color: "error.main" }}
         >
           {errMsg}
         </Typography>
@@ -142,6 +154,7 @@ const Signup = () => {
         >
           Register
         </Button>
+        <Button onClick={navigateToLogin}> Login </Button>
       </Box>
     </div>
   );
