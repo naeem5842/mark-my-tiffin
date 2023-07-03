@@ -21,7 +21,7 @@ const Login = () => {
     setErrMsg("");
   }
 
-  const perfomChecks = ()=>{
+  const perfomChecks = () =>{
     const {email, password} = user
       if(email && password ){
           LoginUser();
@@ -44,10 +44,17 @@ const Login = () => {
         const data = await response.json();
 
         if (response.ok) {
-          console.log("Registeration successful");
+          setErrMsg(data.message)
+          console.log(data.message);
+
+          sessionStorage.setItem('token' , data.token);
+          sessionStorage.setItem('user' , JSON.stringify(data.user));
+          navigate("/dashboard");
+
+          
         } else {
           setErrMsg(data.message)
-          if(data.error) {console.log(data.error)}
+          if(data.error) {console.error(data.error)}
         }
 
       }
